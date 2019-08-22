@@ -1,14 +1,36 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>
       Ionic Blank
     </ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
-<ion-content>
+<ion-content class="content" id="touchArea">
   <div class="ion-padding">
     The world is your oyster.
-    <p>If you get lost, the <a target="_blank" rel="noopener" href="https://ionicframework.com/docs/">docs</a> will be your guide.</p>
+    <p style="color: white;">{{message}}</p>
+  </div>
+
+  <div class="center" [hidden]="!showOptions">
+    <ion-button >Mode</ion-button>
+    <ion-button>Donate</ion-button>
+    <ion-button>Rate</ion-button>
+  </div>
+
+  <div id="0" class="circle">0</div>
+  <div id="1" class="circle">1</div>
+  <div id="2" class="circle">2</div>
+  <div id="3" class="circle">3</div>
+  <div id="4" class="circle">4</div>
+  <div id="5" class="circle">5</div>
+  <div id="6" class="circle">5</div> 
+  <div id="7" class="circle">7</div> 
+  <div id="8" class="circle">8</div>
+  <div id="9" class="circle">9</div> 
+
+  <div [hidden]="tapping" class="center" id="menu">
+    <ion-button md="ios" color="light" size="large" shape="round" fill="outline" (click)="showMenu()"><ion-icon name="arrow-dropup-circle"></ion-icon></ion-button>
   </div>
 </ion-content>
+

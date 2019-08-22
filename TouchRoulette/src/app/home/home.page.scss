@@ -1,1 +1,30 @@
+ion-content {
+    --ion-background-color: #111D12;
+}
 
+.center {
+    align-content: center;
+    text-align: center; 
+}
+
+.circle{
+    position: absolute;
+    color: #fff;
+    top: -44px;
+    left: 0px;
+    margin-left: -30px;
+    margin-top: -30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.62);
+  }
+
+#menu {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;   
+    bottom: 20px;
+}
