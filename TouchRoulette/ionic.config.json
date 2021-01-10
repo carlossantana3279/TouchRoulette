@@ -1,5 +1,10 @@
 {
   "name": "TouchRoulette",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
+    "cordova": {}
+  },
   "type": "angular"
 }

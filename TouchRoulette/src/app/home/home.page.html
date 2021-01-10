@@ -1,22 +1,22 @@
-<!-- <ion-header>
+<!-- <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Ionic Blank
+      Heller2!
     </ion-title>
   </ion-toolbar>
 </ion-header> -->
 
 <ion-content class="content" id="touchArea">
   <div class="ion-padding">
-    The world is your oyster.
     <p style="color: white;">{{message}}</p>
   </div>
-
   <div class="center" [hidden]="!showOptions">
     <ion-button >Mode</ion-button>
     <ion-button>Donate</ion-button>
     <ion-button>Rate</ion-button>
   </div>
+
+  <div>hello?</div>
 
   <div id="0" class="circle">0</div>
   <div id="1" class="circle">1</div>
@@ -27,10 +27,11 @@
   <div id="6" class="circle">5</div> 
   <div id="7" class="circle">7</div> 
   <div id="8" class="circle">8</div>
-  <div id="9" class="circle">9</div> 
+  <div id="9" class="circle">9</div>
 
   <div [hidden]="tapping" class="center" id="menu">
-    <ion-button md="ios" color="light" size="large" shape="round" fill="outline" (click)="showMenu()"><ion-icon name="arrow-dropup-circle"></ion-icon></ion-button>
+    <ion-button md="ios" color="light" size="large" shape="round" fill="outline" (click)="showMenu()">
+      <ion-icon name="chevron-up-outline"></ion-icon>
+    </ion-button>
   </div>
 </ion-content>
-
