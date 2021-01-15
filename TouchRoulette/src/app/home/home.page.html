@@ -7,16 +7,15 @@
 </ion-header> -->
 
 <ion-content class="content" id="touchArea">
-  <div class="ion-padding">
-    <p style="color: white;">{{message}}</p>
-  </div>
-  <div class="center" [hidden]="!showOptions">
-    <ion-button >Mode</ion-button>
-    <ion-button>Donate</ion-button>
-    <ion-button>Rate</ion-button>
+  
+  <div class="center menu-options ion-padding" [hidden]="!showMenuOptions">
+    <ion-button class="" color="light" size="large">Mode</ion-button>
+    <ion-button class="" color="light" size="large">Donate</ion-button>
+    <ion-button class="" color="light" size="large" href="https://play.google.com/store/apps/details?id=com.gmail.cssoftware3279.Touch_Roulette">Rate</ion-button>
   </div>
 
-  <div>hello?</div>
+  <div>hello 11?</div>
+  <div [hidden]="tapping || showMenuOptions" id="main-message" class="ion-padding" style="color: white;">{{message}}</div>
 
   <div id="0" class="circle">0</div>
   <div id="1" class="circle">1</div>
@@ -24,14 +23,15 @@
   <div id="3" class="circle">3</div>
   <div id="4" class="circle">4</div>
   <div id="5" class="circle">5</div>
-  <div id="6" class="circle">5</div> 
+  <div id="6" class="circle">6</div> 
   <div id="7" class="circle">7</div> 
   <div id="8" class="circle">8</div>
   <div id="9" class="circle">9</div>
-
-  <div [hidden]="tapping" class="center" id="menu">
-    <ion-button md="ios" color="light" size="large" shape="round" fill="outline" (click)="showMenu()">
-      <ion-icon name="chevron-up-outline"></ion-icon>
-    </ion-button>
-  </div>
 </ion-content>
+<div [hidden]="tapping" class="center" id="menu">
+  <ion-button md="ios" color="light" size="large" shape="round" fill="outline" (click)="showMenu()">
+    <ion-icon [hidden]="showMenuOptions" name="chevron-up-outline"></ion-icon>
+    <ion-icon [hidden]="!showMenuOptions" name="chevron-down-outline"></ion-icon>
+
+  </ion-button>
+</div>
