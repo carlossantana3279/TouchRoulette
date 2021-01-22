@@ -6,6 +6,11 @@ ion-content {
   --ion-background-color: #1A1D1E;
 }
 
+.main-text {
+  color: #fff;
+  font-size: 20px;
+}
+
 .center {
   align-content: center;
   text-align: center; 
@@ -44,10 +49,10 @@ ion-content {
   position: absolute;
   top: -4000px;
   left: -4000px;
-  margin-left: -30px;
-  margin-top: -30px;
-  width: 110px;
-  height: 110px;
+  margin-left: -35px;
+  margin-top: -35px;
+  width: 125px;
+  height: 125px;
   border-radius: 50%;
   // background: rgba(255,255,255,0.62);
 
@@ -56,9 +61,16 @@ ion-content {
   color: #fff;
   background-color: var(--box-shadow-color);
   border: 5px solid #fff;
-  box-shadow: 0px 0px 50px 15px var(--box-shadow-color);
+  // box-shadow: 0px 0px 50px 15px var(--box-shadow-color);
+  box-shadow: 0px 0px 35px 10px var(--box-shadow-color);
+
   --box-shadow-color: blue;
   transition: 0.3s color;
+}
+
+.circle--active {
+    box-shadow: 0px 0px 45px 15px var(--box-shadow-color);
+    --box-shadow-color: #ffda12;
 }
 
 #menu {
@@ -82,5 +94,10 @@ ion-content {
 .menu-options {
   display: flex;
   flex-direction: column;
+}
 
+.menu-options div,
+.menu-options ion-button {
+margin: 20px 25px 0 25px;
+font-size: 20px;
 }

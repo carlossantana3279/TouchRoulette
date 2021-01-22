@@ -9,6 +9,12 @@ import { HammerGestureConfig } from '@angular/platform-browser';
 })
 export class HomePage {
 
+  // make highlight less
+  // add class that increases box shadow
+  // setting single mode or team mode
+
+  // select a winner
+
   showMenuOptions: boolean = false;
   public tapping: boolean = false;
 
@@ -18,6 +24,8 @@ export class HomePage {
 
   tapScreenMessage: string = "Tap the screen with multiple fingers"
   message: string = this.tapScreenMessage;
+  isSingleMode = true;
+  showingModeMenu = false;
 
   circlePixelOffset = 20;
   
@@ -102,9 +110,17 @@ export class HomePage {
     circle.style.top = `-4000px`
   }
 
-  showMenu(event){
-    console.log(`showMenu()`);
+  handleMenuChange(event){
+    console.log(`handleMenuChange()`);
+    if (this.showingModeMenu){
+      this.showingModeMenu = false;
+      return;
+    }
     this.showMenuOptions = !this.showMenuOptions;
+  }
+
+  showModeMenu(){
+    this.showingModeMenu = true;
   }
 
   notTapping(){
@@ -120,5 +136,13 @@ export class HomePage {
     console.log(eventName);
     console.log(event);
     this.message = JSON.stringify(event);
-  }  
+  }
+
+  selectSingleMode() {
+    this.isSingleMode = true;
+  }
+
+  selectTeamMode() {
+    this.isSingleMode = false;
+  }
 }
