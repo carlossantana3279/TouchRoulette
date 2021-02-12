@@ -23,7 +23,7 @@
     <div class="center main-text" [hidden]="isSingleMode">People will be divided into 2 teams. One blue team (square) and one red (circle) team.</div>
   </div>
 
-  <div [hidden]="tapping || showMenuOptions" id="main-message" class="ion-padding main-text">{{message}}</div>
+  <div [hidden]="isSelectingWinnger || showMenuOptions" id="main-message" class="ion-padding main-text">{{message}}</div>
 
   <div id="0" class="circle">0</div>
   <div id="1" class="circle">1</div>
@@ -36,7 +36,7 @@
   <div id="8" class="circle">8</div>
   <div id="9" class="circle">9</div>
 </ion-content>
-<div [hidden]="tapping" class="center" id="menu">
+<div [hidden]="oneIsTapping || multiTapping" class="center" id="menu">
   <ion-button md="ios" color="light" size="large" shape="round" fill="outline" (click)="handleMenuChange()">
     <ion-icon [hidden]="showMenuOptions || showingModeMenu" name="chevron-up-outline"></ion-icon>
     <ion-icon [hidden]="!showMenuOptions || showingModeMenu" name="chevron-down-outline"></ion-icon>
