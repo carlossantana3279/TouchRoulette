@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { GestureController } from '@ionic/core/dist/collection/utils/gesture/gesture-controller';
 import { HammerGestureConfig } from '@angular/platform-browser';
+import { Vibration } from '@ionic-native/vibration/ngx';
 
 @Component({
   selector: 'app-home',
@@ -14,9 +15,9 @@ export class HomePage {
   // app splash screen
   // random color on each tap
   // single mode winner
-
-  // reset after winner is selected
   // rumble
+  // *** reset after winner is selected
+  // if persono 0 and 1 untap. only 2, 3 are left. But it can't select a winner BUG*******
   // team mode divider
   // ads
 
@@ -33,6 +34,7 @@ export class HomePage {
   touches: any = [];
   maxFingers: Number = 10;
   fingers: any[] = [];
+  currentTouches: number = 0;
 
   tapMoreScreenMessage: string = "Tap more fingers on screen";
   tapScreenMessage: string = "Tap the screen with multiple fingers";
@@ -45,7 +47,7 @@ export class HomePage {
 
   circlePixelOffset = 20;
   
-  constructor() {}
+  constructor(private vibration: Vibration ) {}
 
   ngAfterViewInit(){
     console.log(`ngAfterViewInit()`);
@@ -57,14 +59,21 @@ export class HomePage {
       if (self.showMenuOptions){
         return;
       }
+      
       if (event.targetTouches.length < 2) {
         self.multiTapping = false;
         // end timer here
         self.endCountDownTimer();
-        self.message = self.tapMoreScreenMessage;
+        
+        if (!self.selectSingleWinner){
+          self.message = self.tapMoreScreenMessage;
+        } else if (self.selectSingleWinner){
+          // completely stop if too many people untap
+          self.resetAfterWin();
+        }
       }
       if (event.targetTouches.length < 1) {
-        
+        self.resetAfterWin();
         self.oneIsTapping = false;
         self.message = self.tapScreenMessage;
       }
@@ -81,7 +90,9 @@ export class HomePage {
         self.resetCircle(touchId);
       }
       self.touches = event.touches;
+      self.currentTouches--;
       console.log(`self.touches: `, self.touches);
+      console.log(`self.currentTouches: `, self.currentTouches);
       console.log('finger untapped');
     }, false);
 
@@ -94,7 +105,9 @@ export class HomePage {
       if (event.targetTouches.length > 1) {
         self.multiTapping = true;
         // start timer here?
-        self.startCountDownTimer();
+        if (!self.startedCountdownTimer){
+          self.startCountDownTimer();
+        }
       }
       if (event.targetTouches.length === 1) {
         self.message = self.tapMoreScreenMessage;
@@ -105,7 +118,10 @@ export class HomePage {
         newIds.push(event.changedTouches[i].identifier);
       }
       self.touches = event.touches;
+      self.currentTouches++;
       console.log(`self.touches: `, self.touches);
+      console.log(`self.currentTouches: `, self.currentTouches);
+
       self.drawCircles(event.changedTouches, newIds);
     }, false);
 
@@ -117,6 +133,7 @@ export class HomePage {
       // console.log('touches');
       // console.log(event.targetTouches);
       var touches = event.changedTouches;
+      self.touches = event.touches;
       self.drawCircles(touches);
     }, false);
 
@@ -275,33 +292,40 @@ export class HomePage {
       // self.message = `old i: ${i}, touches.length: ${self.touches.length}`
       let oldCircle = document.getElementById(`${i}`);
       oldCircle.classList.remove("circle--active");
-      if (i >= self.touches.length){
+      if (i >= self.currentTouches-1){
         i = 0;
       } else {
         i++
       }
-      self.message = `new i: ${i}, touches.length: ${self.touches.length}`
+      self.message = `new i: ${i}, touches.length: ${self.touches.length}, currentTouches: ${self.currentTouches}`
 
       let circle = document.getElementById(`${i}`);
       circle.classList.add("circle--active");
+      self.vibration.vibrate(100);
     }, 200)
 
     this.selectingWinnerTid = setTimeout(() => {
       // selecting winner process
       console.log(`clear!!!`)
       clearInterval(selecting);
-      for(let i = 0; i < self.touches.length; i++){
+      for(let i = 0; i < self.currentTouches; i++){
         let clearCircle = document.getElementById(`${i}`);
         clearCircle.classList.remove("circle--active");
       }
 
       setTimeout(() => {
-        const randomElement = Math.floor(Math.random() * self.touches.length + 1);
+        self.message = 'Winner selected'
+        self.vibration.vibrate([500,200,500,200,500]);
+        self.message = 'Winner selected -- vibrate?'
+
+        // selecting the winner
+        const randomElement = Math.floor(Math.random() * self.currentTouches);
         let winnerId = randomElement;
         let circle = document.getElementById(`${winnerId}`);
         circle.classList.add("circle--active");
-        self.isSelectingWinner = false
-      }, 2000)
+        
+        self.message = "Untap all fingers"
+      }, 1000)
     }, 5000);
 
     ;
@@ -312,5 +336,16 @@ export class HomePage {
     this.selectingWinnerTid  = setInterval(() => {
       // TODO: dividing team process
     }, 300);
+  }
+
+  resetAfterWin(){
+    this.isSelectingWinner = false;
+    clearTimeout(this.selectingWinnerTid);
+    this.message = this.tapMoreScreenMessage;
+    this.vibration.vibrate(0); // stop any current vibrations immediately
+    for(let i = 0; i < this.maxFingers; i++) {
+      let circle = document.getElementById(`${i}`);
+      circle.classList.remove("circle--active");
+    }
   }
 }

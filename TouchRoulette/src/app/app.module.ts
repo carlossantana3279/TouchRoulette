@@ -12,6 +12,8 @@ import { AppRoutingModule } from './app-routing.module';
 import "hammerjs"; // HAMMER TIME
 import { HammerGestureConfig } from '@angular/platform-browser';
 
+import { Vibration } from '@ionic-native/vibration/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -20,7 +22,8 @@ import { HammerGestureConfig } from '@angular/platform-browser';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    HammerGestureConfig
+    HammerGestureConfig,
+    Vibration
   ],
   bootstrap: [AppComponent]
 })
