@@ -10,32 +10,37 @@ import { Vibration } from '@ionic-native/vibration/ngx';
 })
 export class HomePage {
 
-
+  // DONE:
   // app icon
   // app splash screen
   // random color on each tap
   // single mode winner
   // rumble
+
+  // TODO:
   // *** reset after winner is selected
-  // if persono 0 and 1 untap. only 2, 3 are left. But it can't select a winner BUG*******
+  // Bug: if persono 0 and 1 untap. only 2, 3 are left. But it can't select a winner
   // team mode divider
   // ads
 
-
+  // General 
   showMenuOptions: boolean = false;
   public multiTapping: boolean = false;
   public oneIsTapping: boolean = false;
 
+  // Timer for selecting a winner. 
   resetTimer: number = 5;
   timer: number = 5;
   startedCountdownTimer: boolean = false;
   timerTid: any;
 
+  // Keeping tack uf current touches
   touches: any = [];
   maxFingers: Number = 10;
   fingers: any[] = [];
   currentTouches: number = 0;
 
+  // MENU
   tapMoreScreenMessage: string = "Tap more fingers on screen";
   tapScreenMessage: string = "Tap the screen with multiple fingers";
   timerCountdownMessage: string = "Starting in: ";
@@ -45,17 +50,18 @@ export class HomePage {
   isSingleMode = true;
   showingModeMenu = false;
 
+  // Rendering circle, move to constants file
   circlePixelOffset = 20;
   
   constructor(private vibration: Vibration ) {}
 
   ngAfterViewInit(){
-    console.log(`ngAfterViewInit()`);
     let self = this;
     var touchArea = document.getElementById('touchArea');
-    console.log(`touchArea: `, touchArea);
 
+    // When someone has stopped touching the screen
     touchArea.addEventListener('touchend', function(event){
+      // If the menu is being used
       if (self.showMenuOptions){
         return;
       }
@@ -77,72 +83,67 @@ export class HomePage {
         self.oneIsTapping = false;
         self.message = self.tapScreenMessage;
       }
-      console.log(event);
      
       // i need to reset (make the circle disapear) when I untap it
       let touches = event.changedTouches;
       for(var i=0; i < touches.length; i++) {
         var touchId = touches[i].identifier;
-        var x = touches[i].pageX;
-        var y = touches[i].pageY;
-        // console.log('x: ', x);
-        // console.log('y: ', y);
         self.resetCircle(touchId);
       }
+
       self.touches = event.touches;
       self.currentTouches--;
-      console.log(`self.touches: `, self.touches);
-      console.log(`self.currentTouches: `, self.currentTouches);
       console.log('finger untapped');
     }, false);
 
+    // When someone has tapped the screen
     touchArea.addEventListener('touchstart', function(event){
+      // If the menu is being used
       if (self.showMenuOptions){
         return;
       }
+
       console.log('finger tapped');
-      console.log(event);
       if (event.targetTouches.length > 1) {
         self.multiTapping = true;
-        // start timer here?
+        // start timer
         if (!self.startedCountdownTimer){
           self.startCountDownTimer();
         }
       }
+
       if (event.targetTouches.length === 1) {
         self.message = self.tapMoreScreenMessage;
         self.oneIsTapping = true;
       }
+
       let newIds = [];
       for(var i=0; i < event.changedTouches.length; i++) {
         newIds.push(event.changedTouches[i].identifier);
       }
+
       self.touches = event.touches;
       self.currentTouches++;
-      console.log(`self.touches: `, self.touches);
-      console.log(`self.currentTouches: `, self.currentTouches);
 
       self.drawCircles(event.changedTouches, newIds);
     }, false);
 
-    // If there's exactly one finger inside this element
+    // When users move their fingers
     touchArea.addEventListener('touchmove', function(event){
       if (self.showMenuOptions){
         return;
       }
-      // console.log('touches');
-      // console.log(event.targetTouches);
       var touches = event.changedTouches;
       self.touches = event.touches;
       self.drawCircles(touches);
     }, false);
-
-    console.log(`finished gnAfterViewInit()`)
   }
 
+  // Render the circles (touches)
   drawCircles(touches, newIds = []){
     let self = this;
     this.touches = touches;
+    // Set a new color for every new touch
     for(let i=0; i < newIds.length; i++) {
       self.setCircleColor(newIds[i]);
     }
@@ -151,36 +152,35 @@ export class HomePage {
       let touchId = touches[i].identifier;
       let x = touches[i].pageX;
       let y = touches[i].pageY;
-      // console.log('x: ', x);
-      // console.log('y: ', y);
       self.moveCircle(touchId, x, y);
     }
 
   }
 
+  // Move the circle to a certain spot
   moveCircle(id, x, y){
     let circle = document.getElementById(`${id}`);
     circle.style.left = `${x - this.circlePixelOffset}px`
     circle.style.top = `${y - this.circlePixelOffset}px`
   }
 
+  // Set the color of a circle
   setCircleColor(id){
-    // console.log(`setCircleColor()`);
-    // console.log(id)
     let circle = document.getElementById(`${id}`);
     let randomColor = Math.floor(Math.random()*16777215).toString(16);
     circle.style["background-color"] = `#${randomColor}`;
     circle.style["box-shadow"] = `0px 0px 35px 10px #${randomColor}`;
   }
 
+  // Reset the location of a circle
   resetCircle(id){
     let circle = document.getElementById(`${id}`);
     circle.style.left = `-4000px`
     circle.style.top = `-4000px`
   }
 
+  // Toggling the menu
   handleMenuChange(event){
-    console.log(`handleMenuChange()`);
     if (this.showingModeMenu){
       this.showingModeMenu = false;
       return;
@@ -202,8 +202,6 @@ export class HomePage {
 
   tapEvent(event, eventName = "tap"){
     // console.log('x: ' + event.center.x + ', y: ' + event.center.y);
-    console.log(eventName);
-    console.log(event);
     this.message = JSON.stringify(event);
   }
 
@@ -217,6 +215,7 @@ export class HomePage {
 
   startCountDownTimer(){
     let self = this;
+    // If the count down timer has already started
     if (this.startedCountdownTimer || this.isSelectingWinner){
       console.log(`return;`)
       return;
@@ -224,30 +223,28 @@ export class HomePage {
     console.log(`startCountDownTimer()`);
     this.startedCountdownTimer = true;
     this.timerTid = setInterval(() => {
-      // console.log(`interval()`);
 
+      // When the timer has reached 0
       if (self.timer <= 0){
         self.message = "Start counting boys!!!"
         self.endCountDownTimer();
-        console.log(`here?`)
         self.selectWinnter();
         return;
       }
 
       self.timer--;
       self.message = `${self.timerCountdownMessage} ${self.timer}`;
-      // console.log(`self.timer: `, self.timer);
-
     }, 1000)
   }
 
+  // End the countdown timer
   endCountDownTimer(){
-    console.log(`endCountDownTimer()`);
     this.timer = this.resetTimer;
     this.startedCountdownTimer = false;
     clearInterval(this.timerTid);
   }
 
+  // Selecting a winner
   selectWinnter(){
     if (this.isSelectingWinner){
       return;
@@ -264,32 +261,9 @@ export class HomePage {
     let self = this;
     
     // make it look like it's going around for a bit
-    // ** need to add rumble!
     let i = 0;
     let selecting = setInterval(() => {
-      // if we passed the last circle
-      // if (i-1 >= 0){
-      //   let previousCirlce = document.getElementById(`${i-1}`);
-      //   previousCirlce.classList.remove("circle--active");
-      // } else if (i === 0){
-      //   let previousCirlce = document.getElementById(`${self.touches.length - 1}`);
-      //   previousCirlce.classList.remove("circle--active");
-      // }
-     
-      // let circle = document.getElementById(`${i}`);
-      // circle.classList.add("circle--active");
-      // i++;
-      
-      // if (i === self.touches.length){
-      //   i = 0;
-      // }
 
-      // if (i == 0){
-      //   i = 1;
-      // } else {
-      //   i = 0;
-      // }
-      // self.message = `old i: ${i}, touches.length: ${self.touches.length}`
       let oldCircle = document.getElementById(`${i}`);
       oldCircle.classList.remove("circle--active");
       if (i >= self.currentTouches-1){
@@ -306,7 +280,6 @@ export class HomePage {
 
     this.selectingWinnerTid = setTimeout(() => {
       // selecting winner process
-      console.log(`clear!!!`)
       clearInterval(selecting);
       for(let i = 0; i < self.currentTouches; i++){
         let clearCircle = document.getElementById(`${i}`);
